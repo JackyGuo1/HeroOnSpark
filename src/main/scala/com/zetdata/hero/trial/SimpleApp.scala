@@ -127,17 +127,17 @@ object SimpleApp {
     
     
     
-    val match_score_candid_part_topN_flat = match_score_candid_part_topN.flatMap(_.iterator)
+    val match_score_candid_part_topN_flat = match_score_candid_part_topN.flatMap(_.iterator).map((tuple:(Int,Int,Double))=>(tuple._1,tuple._2,tuple._3,1))
     
-    val match_score_huntor_part = match_score_raw.filter(_._3 > 0.00001).groupBy(_._1)
+    val match_score_huntor_part = match_score_raw.filter(_._3 > 0.00001).map((tuple:(Int,Int,Double))=>(tuple._2,tuple._1,tuple._3)).groupBy(_._1)
     match_score_huntor_part.cache()
     val match_score_huntor_part_topN = match_score_huntor_part.map(topN)
-    val match_score_huntor_part_topN_flat = match_score_huntor_part_topN.flatMap(_.iterator)
+    val match_score_huntor_part_topN_flat = match_score_huntor_part_topN.flatMap(_.iterator).map((tuple:(Int,Int,Double))=>(tuple._1,tuple._2,tuple._3,0))
 
 
     val match_analsis = match_result_analysis.map(_._2)
 
-    match_score_candid_part_topN_flat.++(match_score_huntor_part_topN_flat).coalesce(1, false).map(tuple => "%s,%s,%s".format(tuple._1, tuple._2, tuple._3)).saveAsTextFile(match_result_dir)
+   match_score_candid_part_topN_flat.++(match_score_huntor_part_topN_flat).coalesce(1, false).map(tuple => "%s,%s,%s,%s".format(tuple._1, tuple._2, tuple._3,tuple._4 )).saveAsTextFile(match_result_dir)
 
   }
 }
