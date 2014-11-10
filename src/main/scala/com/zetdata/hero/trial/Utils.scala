@@ -39,8 +39,8 @@ object Utils {
       
       
       var unique_list = List[(Int, String)]()
-      unique_list.+:(list.getFirst())
-      for (j <- 1 to list.size()-1 if list.get(j) != list.get(j-1)){unique_list = unique_list.+:(list.get(j))  }
+      unique_list = unique_list.:+(list.getFirst())
+      for (j <- 1 to list.size()-1 if list.get(j) != list.get(j-1)){unique_list = unique_list.:+(list.get(j))  }
       unique_list
     }
     
